@@ -1,0 +1,2 @@
+npm i react-router-dom concurrently
+"both": "concurrently \"npm run start\" \"nodemon backend/index.js\"" (in pacakage.json scripts) to run backend and frontend symultaneously
