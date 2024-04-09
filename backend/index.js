@@ -1,9 +1,13 @@
 const connectToMongo = require('./db');
 connectToMongo();
 
-const express = require('express')
-const app = express()
+var cors = require('cors')
+var express = require('express')
 const port = 5000
+var app = express()
+
+
+app.use(cors())
 
 //middleware for using api
 app.use(express.json());

@@ -1,3 +1,4 @@
 install becrypt js package for security
 npm install bcryptjs
 npm i jsonwebtoken
+npm install cors
