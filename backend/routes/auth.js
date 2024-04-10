@@ -70,6 +70,7 @@ router.post(
     body("password", "Password can not be blanked").exists(),
   ],
   async (req, res) => {
+    let success = false;
 
     //if there are errors return bad requets and the errors
     const errors = validationResult(req);
@@ -86,7 +87,7 @@ router.post(
 
       const passwordCompare = bcrypt.compare(password, user.password);
       if(!passwordCompare){
-        return res.status(400).json({error:"please try to login with correct credentials"});
+        return res.status(400).json({success, error:"please try to login with correct credentials"});
       }
 
       const data = {
@@ -96,7 +97,8 @@ router.post(
       }
 
       const authtoken = await jwt.sign(data, JWT_SECRET);
-      res.json({authtoken});
+      success = true;
+      res.json({success,authtoken});
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal Server error");
