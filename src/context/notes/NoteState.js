@@ -41,8 +41,8 @@ const NoteState = (props) => {
 
       body: JSON.stringify({title, description, tag}),
     });
-    const json = response.json();
-    console.log("Adding a new note")
+    const json = await response.json();
+    console.log(json);
     const note = {
       "_id": "660d",
       "user": "660c1ecaf0f42e35c6eb3747",
@@ -81,7 +81,7 @@ const NoteState = (props) => {
       method: "PUT",
 
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': "application/json",
         "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjYwYzFlY2FmMGY0MmUzNWM2ZWIzNzQ3In0sImlhdCI6MTcxMjEzMDMyOX0.lzPJYHhiokSNEs47ljEiQ4eW-HizHKWdK0LqqsJ8yEc",
 
       },
@@ -89,17 +89,21 @@ const NoteState = (props) => {
       body: JSON.stringify({title, description, tag}),
     });
     const json = response.json();
+    console.log(json);
 
+    let newNotes = JSON.parse(JSON.stringify(notes))
     //logic to edit in client
     for (let index = 0; index < notes.length; index++) {
       const element = notes[index];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
       }
-
+     
     }
+    setNotes(newNotes);
   }
 
 
