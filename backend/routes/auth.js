@@ -16,10 +16,11 @@ router.post(
     body("password").notEmpty().withMessage("Password must not be empty"),
   ],
   async (req, res) => {
+    let success = false;
     //if there are errors, return bad request and the errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ success,errors: errors.array() });
     }
     try {
       // Check if user with this email already exists
@@ -29,7 +30,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ error: "Sorry, a user with this email already exists" });
+          .json({ success, error: "Sorry, a user with this email already exists" });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -53,7 +54,8 @@ router.post(
       
       // Sending response with the newly created user
     //   res.json(user);
-        res.json(authtoken);
+      success = true;
+      res.json({success,authtoken});
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal Server error");
@@ -85,7 +87,7 @@ router.post(
         return res.status(400).json({error:"please try to login with correct credentials"});
       }
 
-      const passwordCompare = bcrypt.compare(password, user.password);
+      const passwordCompare = await bcrypt.compare(password, user.password);
       if(!passwordCompare){
         return res.status(400).json({success, error:"please try to login with correct credentials"});
       }
@@ -96,7 +98,7 @@ router.post(
         }
       }
 
-      const authtoken = await jwt.sign(data, JWT_SECRET);
+      const authtoken =  jwt.sign(data, JWT_SECRET);
       success = true;
       res.json({success,authtoken});
     } catch (error) {
